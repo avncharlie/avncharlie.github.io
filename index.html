@@ -1,1 +1,80 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="description" content="Learn how to solve the rubiks cube with an easy 3D tutorial."><meta name="keywords" content="rubiks, cube, rubiks cube, tutorial, rubiks cube tutorial, rubiks cube guide, how to do the rubiks cube, 3d rubiks cube guide, 3d, three.js"><meta name="author" content="Alvin Joy Charles, alvinjoycharles@gmail.com"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"><link rel="manifest" href="site.webmanifest"><link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#00aba9"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" type="text/css" href="css/style.css"><title>Rubiks</title><script src="js/libs/three.min.js"></script><script src="js/libs/OrbitControls.js"></script><script src="js/libs/Tween.js"></script></head><body></body><script src="js/Rubiks3d.js"></script><script src="js/main.js"></script></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- META -->
+  <meta charset="utf-8">
+  <meta name="description" content="Sorting visual and audio visualiser">
+  <meta name="author" content="Alvin Charles">
+  <meta name="keywords" content="sorting,visualiser,html,css,javascript,audio visualiser">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TITLE -->
+  <title>toneSort</title>
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/fontawesome.min.css">
+  <link rel="stylesheet" href="css/solid.min.css">
+  
+  <!-- LIBRARIES -->
+  <script type="text/javascript" src="js/jquery.min.js" defer></script>
+  <script type="text/javascript" src="js/chroma.min.js" defer></script>
+  <script type="text/javascript" src="js/jcanvas.min.js" defer></script>
+  
+  <!-- MAIN SCRIPT -->
+  <script type="text/javascript" src="js/index.js" defer></script>
+</head>
+
+<body>
+  <div id="container">
+    <div id="output">
+        <canvas id="barDisplay"></canvas>
+    </div>
+    
+    <div id="controls">
+      <!-- randomise bars -->
+  	  <button id="randomise" class="button">randomise</button>
+  	  
+  	  <p class="sliderLabel">bars</p>
+  	  
+  	  <!-- number of bars slider -->
+  	  <div class="slidecontainer">
+        <input style="display: none" type="range" min="3" max="100" value="10" class="slider" id="numBars">
+        <span style="display: none" id="numBarsDisplay">10</span>
+  	  </div>
+  	  
+  	  <p class="sliderLabel">playback</p>
+  	  
+  	  <div class="playback">
+        <div class="pausePlayButton"></div>
+        <div class="slidecontainer" id="delaySlideContainer">
+          <input style="display: none" type="range" min="1" max="700" value="10" class="slider" id="delay">
+          <span style="display: none" id="delayDisplay"><i id="delayIcon" class="fas fa-angle-right"></i></span>
+  	    </div>
+  	  </div>
+  	  
+  	  <p class="sliderLabel">sort</p>
+  	  
+  	  <div id="sortContainer">
+          <div id="dropdown">
+  	          <div id="selectedSort"><span class="selectedSortText">selection sort</span></div>
+  	          <div id="dropdownContainer">
+                  <p>bubble sort</p>
+  	              <p>selection sort</p>
+  	              <p>insertion sort</p>
+  	          </div>
+  	      </div>
+  	      <div id="goButton">go</div>
+  	  </div>
+  	  
+  	  <p class="sliderLabel" id="stats">stats</p>
+  	  <div id="statContainer">
+          <p>array accesses:<span id="steps">0</span></p>
+  	      <p>comparisons:<span id="comparisons">0</span></p>
+  	  </div>
+  	</div>
+  	
+  </div>
+</body>
+</html>

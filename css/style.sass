@@ -1,0 +1,280 @@
+// button colours
+$button-primary-color: unquote("#88B5F4")
+
+// container gradients
+$controls-top-gradient: unquote("#D9FEBA")
+$controls-bottom-gradient: unquote("#FFE584")
+$output-top-right-gradient: unquote("#FCD0F4ED")
+$output-bottom-left-gradient: unquote("#FFECA8C9")
+
+// selected bar colour
+$bar-selected-colour: unquote("#7054B2")
+
+// transition delay for control elements
+$control-transition-delay: 0.1s
+
+// slider
+$thumb-radius: 30px
+$thumb-color: unquote("#88B5F4")
+$track-width: 10px
+$track-color: unquote("#7B68EE")
+
+// general
+*
+	box-sizing: border-box
+
+html, body
+	height: 100%
+	margin: 0px
+
+// input slider
+input[type=range]
+	-webkit-appearance: none // hides the slider so that custom slider can be made
+	background: transparent
+
+// remove blue outline on focus
+input[type=range]:focus
+	outline: none
+
+// slider thumb
+input[type=range]::-webkit-slider-thumb
+	-webkit-appearance: none
+	height: $thumb-radius
+	width: $thumb-radius
+	border-radius: 0px
+	background: $thumb-color
+	cursor: pointer
+	margin-top: -1 * ($thumb-radius/2) + $track-width / 2
+
+// slider track
+input[type=range]::-webkit-slider-runnable-track
+	width: 100%
+	height: $track-width
+	cursor: pointer
+	background: $track-color
+	background: linear-gradient(to right, $controls-bottom-gradient, $track-color) 
+	border-radius: 0px
+
+// body
+#container
+	height: 100%
+
+	#output
+		float: left
+		width: 80%
+		height: 100%
+		background: linear-gradient(to bottom left, $output-top-right-gradient,$output-bottom-left-gradient)
+        
+		#barDisplay
+			display: block
+
+	#controls
+		float: right
+		background: linear-gradient($controls-top-gradient, $controls-bottom-gradient) 
+		width: 20%
+		height: 100%
+
+		.button
+			font-family: Raleway
+			background-color: transparent
+			border: none
+			padding: 15px 32px
+			text-align: center
+			font-size: 1.2em
+			font-weight: bold
+			width: calc(100% - 20px)
+			margin: 10px 10px 0px 10px
+			color: $button-primary-color
+			border-style: solid
+			border-width: 3px
+			text-transform: uppercase
+			transition: all $control-transition-delay linear
+			cursor: grab
+			
+			&:focus
+				outline: none
+
+			&:hover
+				color: $controls-top-gradient
+				background-color: $button-primary-color
+				border-color: $button-primary-color
+
+		.sliderLabel
+			margin-left: 12px
+			margin-top: 15px
+			margin-bottom: 10px
+			text-transform: uppercase
+			font-family: Raleway
+			font-size: .9em
+			color: $button-primary-color
+			font-weight: bold
+
+		#stats
+			margin-top: 25px
+
+		#statContainer>p
+			margin: 0px
+			margin-left: 12px
+			margin-top: 12px
+			text-transform: uppercase
+			font-family: Raleway
+			font-size: .8em
+			color: unquote("#7B68EE")
+			font-weight: bold
+
+			span
+				color: unquote("#000")
+				margin-left: 4px
+
+		.slidecontainer
+			width: calc(100% - 23px)
+			margin: 10px
+			
+			.slider
+				width: 100%
+				height: 25px
+				
+
+			#numBarsDisplay
+				font-family: Raleway
+				pointer-events: none
+				color: #fff
+				font-size: .8em
+				position: relative
+				text-align: center
+				width: 30px
+				top: -22px
+				//border-style: solid // for debug
+    
+		#delaySlideContainer
+			width: calc(84%)
+			margin: 0 0 0 0
+			float: right
+			
+			#delayDisplay
+				font-family: Raleway
+				pointer-events: none
+				color: #fff
+				font-size: .8em
+				position: relative
+				text-align: center
+				width: 30px
+				top: -22px
+    
+	.playback
+		margin: 10px
+		overflow: hidden
+
+	.pausePlayButton
+		height: $thumb-radius
+		background: $button-primary-color
+		margin: 0 0 0 0
+		margin-left: 3px
+		float: left
+		text-align: center
+
+		background: transparent
+		box-sizing: border-box
+		width: 0
+
+		border-color: transparent transparent transparent #ada1ea
+		transition: 50ms all ease
+		cursor: pointer
+
+		// play state
+		border-style: solid
+		border-width: $thumb-radius/2 0 $thumb-radius/2 $thumb-radius*0.9
+
+		&.paused
+			border-style: double
+			border-width: 0px 0 0px $thumb-radius*0.9
+
+		&:hover
+			border-color: transparent transparent transparent #9a8bed
+
+	#sortContainer
+		//border-style: solid
+		overflow: hidden
+		margin: 10px
+
+		#dropdown
+			&:hover #dropdownContainer
+				opacity: 1
+				display: block
+    
+		#dropdownContainer
+			opacity: 0
+			display: none
+			background-color: #f9f9f9
+			position: absolute
+			border-style: solid
+			border-color: #ada1ea
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+			z-index: 1
+			margin-top: 54px
+			max-height: 250px
+			overflow: auto
+			transition: all 70ms linear
+
+			p
+				font-family: Raleway
+				padding: 14px 14.5px
+				margin: 0px
+				text-decoration: none
+				display: block
+				text-transform: uppercase
+				font-size: 0.8em
+				color: #ada1ea
+				font-weight: bold
+				transition: all 50ms linear
+				cursor: grab
+				user-select: none
+    
+				&:hover
+					background-color: #ada1ea
+					color: #fff
+
+		#selectedSort
+			font-family: Raleway
+			background-color: transparent
+			border: none
+			padding: 17px 0px
+			text-align: center
+			font-size: 0.9em
+			font-weight: bold
+			width: 60%
+			margin: 0 0 0 0
+			color: #ada1ea
+			border-style: solid
+			border-color: #ada1ea
+			border-width: 3px
+			text-transform: uppercase
+			transition: all $control-transition-delay linear
+			cursor: grab
+			float: left
+			user-select: none
+
+		#goButton
+			background-color: #ada1ea
+			border-color: #ada1ea
+			font-family: Raleway
+			border: none
+			padding: 11px 0px
+			text-align: center
+			font-size: 1.5em
+			font-weight: bold
+			width: 35%
+			margin: 0 0 0 0
+			color: #fff
+			border-style: solid
+			border-color: #ada1ea
+			border-width: 3px
+			text-transform: uppercase
+			transition: all $control-transition-delay linear
+			cursor: grab
+			float: right
+			user-select: none
+
+			&:hover
+				background-color: #9a8bed
+				border-color: #9a8bed
