@@ -21,6 +21,9 @@ var finishedAnimation = true;
 var isPaused = true;
 
 var actualDelay = 700-delay+1;
+var animationDelayCutoff = 35;
+
+var frameSkip = 1;
 
 var canvasSelector = "#barDisplay";
 var canvasParentSelector = "#output";   
@@ -487,7 +490,19 @@ $("#delaySlideContainer").on('input', function(e) {
     var newDelay = $(e.target).val();
     updateDelay(newDelay);
     delay = newDelay;
-    actualDelay = 700 - newDelay + 1;
+    actualDelay = 700 - newDelay;
+    
+    // set frameskip
+    var delayPercentage = actualDelay / animationDelayCutoff;
+    if (delayPercentage < 1) {
+        if (delayPercentage > 0.6) {
+            frameSkip = 2;
+        } else {
+            frameSkip = 3;
+        }
+    } else {
+        frameSkip = 1;
+    }
 });
 
 function updateVolume(newVolume) {
@@ -597,7 +612,6 @@ async function goButton() {
     "use strict";
     
     if (!finishedAnimation) {
-        console.log("uh oh");
         await waitForAnimationToStop();
     }
     
@@ -708,13 +722,19 @@ async function playSortInstructions(instructions) {
         
         if (instruction.type === "SELECT") {
             
-            
             playTone(frequencyVals[0] + (bars[instruction.index] * ((frequencyVals[1]-frequencyVals[0])/bars.length) ));
             
-            
-            $(canvasSelector).animateLayer("#" + bars[instruction.index], {
-                fillStyle: selectedColour
-            }, actualDelay, function(){});
+            if (actualDelay > animationDelayCutoff) {
+                // animation
+                $(canvasSelector).animateLayer("#" + bars[instruction.index], {
+                    fillStyle: selectedColour
+                }, actualDelay, function(){});
+            } else {
+                // non animation
+                $(canvasSelector).setLayer("#" + bars[instruction.index], {
+                    fillStyle: selectedColour
+                }).drawLayers();
+            }
         } 
         
         else if (instruction.type === "INCREMENT") {
@@ -733,14 +753,23 @@ async function playSortInstructions(instructions) {
             var canvas = $(canvasSelector);
             var barWidth = canvas.innerWidth() / bars.length;
             var swapWidth = (instruction.indexes[0] - instruction.indexes[1]) * barWidth;
-            // left bar to right
-            $(canvasSelector).animateLayer("#" + bars[instruction.indexes[0]], {
-                x: "+=" + swapWidth
-            }, actualDelay, function(){});
-             // right bar to left
-            $(canvasSelector).animateLayer("#" + bars[instruction.indexes[1]], {
-                x: "-=" + swapWidth
-            }, actualDelay, function(){});
+            if (actualDelay > animationDelayCutoff) {
+                // animation
+                $(canvasSelector).animateLayer("#" + bars[instruction.indexes[0]], {
+                    x: "+=" + swapWidth
+                }, actualDelay, function(){});
+                $(canvasSelector).animateLayer("#" + bars[instruction.indexes[1]], {
+                    x: "-=" + swapWidth
+                }, actualDelay, function(){});
+            } else {
+                // non animation
+                $(canvasSelector).setLayer("#" + bars[instruction.indexes[0]], {
+                    x: "+=" + swapWidth
+                });
+                $(canvasSelector).setLayer("#" + bars[instruction.indexes[1]], {
+                    x: "-=" + swapWidth
+                });
+            }
         }
         
         else if (instruction.type === "DESELECT") {
@@ -751,7 +780,7 @@ async function playSortInstructions(instructions) {
         }
         
         // no delay on deselecting or incrementing counters
-        if (instruction.type !== "DESELECT" && instruction.type !== "INCREMENT") {
+        if ( (!["DESELECT", "INCREMENT"].includes(instruction.type)) && (x % frameSkip === 0) ) {
             await sleep(actualDelay);
         }
     }
