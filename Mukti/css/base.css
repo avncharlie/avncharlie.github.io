@@ -179,14 +179,7 @@ body {
     margin-left: 15px;
   }
 }
-@media screen and (max-width: 646px) {
-  #header {
-    font-size: 0.75em;
-    height: 72px;
-  }
-}
-/* collapse header */
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 650px) {
   #navbar li {
     float: none;
     width: 100%;
@@ -372,7 +365,7 @@ body {
 }
 
 /* collapse footer */
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 650px) {
   #footer-left, #footer-center, #footer-right {
     float: none;
     width: 100%;

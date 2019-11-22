@@ -18,7 +18,7 @@ function updateNavBar() {
   var bars = document.getElementById("bars");
   var navbar = document.getElementById("navbar");
   
-  if (currentWidth < 600) { 
+  if (currentWidth < 651) { 
     bars.setAttribute("style", "display: block");
     if (!inDropDownState) {
       navbar.setAttribute("style", "display: none");
