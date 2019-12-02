@@ -43,9 +43,49 @@
   </div>
   
   <!-- BODY -->
-  <div id="body" style="margin: 45px">
-    <h1>body content</h1>
-    <p style="margin-top: 7px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tristique magna sit amet purus gravida quis blandit. Bibendum enim facilisis gravida neque convallis a. Maecenas accumsan lacus vel facilisis volutpat est velit egestas. Ullamcorper sit amet risus nullam eget felis eget. Non tellus orci ac auctor augue mauris augue. Diam vulputate ut pharetra sit amet. Porttitor lacus luctus accumsan tortor posuere. Lorem sed risus ultricies tristique nulla aliquet enim. A cras semper auctor neque vitae tempus. Eget mi proin sed libero enim sed faucibus.</p>
+  <div id="body" >
+    
+    <!-- carousel -->
+    <div class="slideshow-container">
+      
+      <!-- images -->
+      <div class="mySlides">
+        <div class="overlay">
+          <div class="textContainer">A home where destitute women and children are accepted, cared for and empowered.</div>
+        </div>
+        <img src="carousel-pics/DSC_7115.jpg" style="width:100%">
+      </div>
+    
+      <div class="mySlides">
+        <div class="overlay">
+          <div class="textContainer">A home where destitute women and children are accepted, cared for and empowered.</div>
+        </div>
+        <img src="carousel-pics/DSC_6889.jpg" style="width:100%">
+      </div>
+    
+      <div class="mySlides">
+        <div class="overlay">
+          <div class="textContainer">A home where destitute women and children are accepted, cared for and empowered.</div>
+        </div>
+        <img src="carousel-pics/DSC_7134.jpg" style="width:100%">
+      </div>
+      
+      <div class="mySlides">
+        <div class="overlay">
+          <div class="textContainer">A home where destitute women and children are accepted, cared for and empowered.</div>
+        </div>
+        <img src="carousel-pics/DSC_7282.jpg" style="width:100%">
+      </div>
+      
+      <!-- selector rectangles at bottom -->
+      <div id="selectors-container" >
+        <span class="rect-selector" onclick="currentSlide(1)"></span>
+        <span class="rect-selector" onclick="currentSlide(2)"></span>
+        <span class="rect-selector" onclick="currentSlide(3)"></span>
+        <span class="rect-selector" onclick="currentSlide(4)"></span>
+      </div>     
+      
+    </div>
   </div>
   
   <!-- FOOTER -->
@@ -105,5 +145,9 @@
   
   <!-- common js for all pages -->
   <script src="js/base.js"></script>
+  
+  <!-- page specific js -->
+  <script src="js/home.js"></script>
+  
 </body>
-</html
+</html>

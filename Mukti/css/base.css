@@ -179,7 +179,12 @@ body {
     margin-left: 15px;
   }
 }
-@media screen and (max-width: 650px) {
+/* collapse header */
+@media screen and (max-width: 649px) {
+  #header {
+    font-size: 0.75em;
+    height: 72px;
+  }
   #navbar li {
     float: none;
     width: 100%;
@@ -272,7 +277,6 @@ body {
   float: left;
   width: 100%
 }
-
 .icon-container {
   background-color: dimgray;
   display: inline-block;
@@ -285,9 +289,9 @@ body {
 
 .icon-container i {
   background-color: dimgray;
-  color: lightgray;
+  color: ghostwhite;
   font-size: 1.3em;
-  margin-left: 4.52px;
+  margin-left: 4px;
   margin-top: 1px;
 }
 
@@ -365,7 +369,7 @@ body {
 }
 
 /* collapse footer */
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 649px) {
   #footer-left, #footer-center, #footer-right {
     float: none;
     width: 100%;
