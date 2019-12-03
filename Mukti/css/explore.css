@@ -1,0 +1,28 @@
+/* standard styling */
+#body {
+  margin: auto;
+  position: relative;
+  width: 100%;
+  max-width: 1500px;
+}
+
+/* panels styling */
+#picture-panel, #descriptions {
+  width: 50%;
+  display: inline-block;
+  border: 1px solid black;
+}
+
+#picture-panel {
+  float: left;
+  overflow: hidden;
+}
+
+#picture-panel img {
+  object-fit: cover;
+  height: 100%
+}
+
+#descriptions {
+  float: right;
+}
