@@ -10,7 +10,6 @@
 #picture-panel, #descriptions {
   width: 50%;
   display: inline-block;
-  border: 1px solid black;
 }
 
 #picture-panel {
@@ -25,4 +24,53 @@
 
 #descriptions {
   float: right;
+  overflow: auto;
+}
+
+/* descriptions styling */
+.item {
+  width: 100%;
+  background: #FFF2DE;
+  height: 120px;
+  overflow: auto;
+}
+
+.container {
+  margin-left: 30px;
+  padding-top: 25px;
+  background-color: #FFF2DE;
+}
+
+.item h1 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  font-size: 1.3em;
+  text-transform: uppercase;
+  background: #FFF2DE;
+}
+
+.item p {
+  padding-top: 5px;
+  padding-bottom: 13px;
+  font-size: 0.9em;
+  background: #FFF2DE;
+}
+
+.item a {
+  text-decoration: none;
+  font-size: 0.9em;
+  color: #337AB7;
+  background: #FFF2DE;
+}
+
+.active {
+  background: #FFD696;
+}
+
+.active .container {
+  background-color: #FFD696;
+}
+
+.active h1, .active p, .active a {
+  background-color: #FFD696;
 }

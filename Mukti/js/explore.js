@@ -9,24 +9,21 @@ document.addEventListener('DOMContentLoaded', function () {
 function sizePanels() {
   document.getElementById("body").style.padding = "40px";
   
-  var viewportRatio = window.innerHeight / window.innerWidth;
-  console.log(viewportRatio);
+  var windowHeight = window.innerHeight;
+  var headerHeight = document.getElementById("header").offsetHeight;
   
-  // keep panels in aspect ratio
-  var ratio;
-  if (viewportRatio > 2) {
-    ratio = 1.9;
-  } else if (viewportRatio > 1) {
-    ratio = 1.5;
-  } else {
-    ratio = 1.1;
-  }
-  var width = document.getElementById("picture-panel").offsetWidth;
-  var newHeight = width * ratio;
-  document.getElementById("picture-panel").style.height =  newHeight + "px";
-  document.getElementById("descriptions").style.height = newHeight + "px";
+  var bodyHeight = windowHeight - headerHeight - 80;
   
-  // vertically center container
-  var containerHeight = document.getElementById("body").offsetHeight;
-  document.getElementById("body").style.padding = containerHeight/2 - newHeight/2 + "px 40px";
+  document.getElementById("picture-panel").style.height = bodyHeight + "px";
+  document.getElementById("descriptions").style.height = bodyHeight + "px";
+}
+
+
+function changePicture(element, picture) {
+  element.classList.add("active");
+  document.querySelector("#picture-panel img").src = "explore-pics/" + picture;
+}
+
+function removeClass(element) {
+  element.classList.remove("active");
 }
