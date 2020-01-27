@@ -31,14 +31,14 @@
 .item {
   width: 100%;
   background: #FFF2DE;
-  height: 120px;
   overflow: auto;
 }
 
 .container {
   margin-left: 30px;
-  padding-top: 25px;
   background-color: #FFF2DE;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .item h1 {
@@ -47,6 +47,7 @@
   font-size: 1.3em;
   text-transform: uppercase;
   background: #FFF2DE;
+  padding-right: 15px;
 }
 
 .item p {
@@ -54,6 +55,7 @@
   padding-bottom: 13px;
   font-size: 0.9em;
   background: #FFF2DE;
+  padding-right: 15px;
 }
 
 .item a {
@@ -61,6 +63,7 @@
   font-size: 0.9em;
   color: #337AB7;
   background: #FFF2DE;
+  padding-right: 15px;
 }
 
 .active {

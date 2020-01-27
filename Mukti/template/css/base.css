@@ -1,0 +1,382 @@
+/*** COMMON STYLING ***/
+
+/* sensible defaults + set fonts */
+* {
+    margin: 0;
+    box-sizing: border-box;
+    background-color: #fff9f5;
+    font-family: 'Raleway', sans-serif;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* keep footer at bottom and footer + header fixed size */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#body {
+  flex: 1 0 auto;
+}
+
+#header {
+  flex-shrink: 0;
+}
+
+#footer {
+  flex-shrink: 0;
+}
+
+
+/*** HEADER STYLING ***/
+
+#header {
+  background-color: #fbe3ca;
+  width: 100%;
+  height: 90px;
+
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+#logo {
+  /* vertically center */
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  margin-left: 40px;
+  height: 60px;
+  width: 60px;
+  background-color: #90cfff;
+  float: left;
+}
+
+/* bars css */
+#bars {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 15px;
+  font-size: 3em;
+  background-color: #fbe3ca;
+}
+
+#bars i {
+  background-color: #fbe3ca;
+  color: #f7c796;
+  transition: color 0.1s;
+}
+
+#bars i:hover {
+  background-color: #fbe3ca;
+  color: #e88e38;
+}
+
+/* navbar css */
+
+#navbar {
+  /* vertically center */
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  float: left;
+  margin-left: 15px;
+  margin-right: 25px;
+  width: calc(100% - 145px);
+}
+
+#navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #fbe3ca;
+}
+
+#navbar li {
+  float: left;
+  margin-top: 6px;
+}
+
+#navbar a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 30px;
+  text-decoration: none;
+  background-color: #fbe3ca; 
+}
+
+#navbar a:hover {
+  background-color: #f7c796;
+  color: #e88e38;
+}
+
+#getInvolved {
+  float: right !important;
+  margin-top: 3px !important;
+}
+#getInvolved a {
+  color: #e88e38;
+  font-size: 1.3em;
+}
+
+
+/* update navbar together as screen resizes*/
+@media screen and (max-width: 1041px) {
+  #navbar {
+    margin-right: 5px;
+    width: calc(100% - 125px);
+  }
+  #navbar a {
+    padding: 14px 16px;
+  }
+}
+@media screen and (max-width: 853px) {
+  #home {
+    display: none
+  }
+}
+@media screen and (max-width: 788px) {
+  #navbar {
+    margin-right: 5px;
+    width: calc(100% - 125px);
+  }
+  #navbar a {
+    padding: 14px 12px;
+  }
+  #logo {
+    margin-left: 25px;
+  }
+}
+@media screen and (max-width: 738px) {
+  #header {
+    font-size: 0.85em;
+    height: 80px;
+  }
+  #navbar {
+    margin-left: 5px;
+    margin-right: 0px;
+    width: calc(100% - 110px);
+  }
+  #navbar a {
+    padding: 14px 7px;
+  }
+  #logo {
+    margin-left: 15px;
+  }
+}
+/* collapse header */
+@media screen and (max-width: 649px) {
+  #header {
+    font-size: 0.75em;
+    height: 72px;
+  }
+  #navbar li {
+    float: none;
+    width: 100%;
+    margin-top: 0px;
+  }
+  #navbar a {
+    text-align: left;
+    padding-left: 20px;
+  }
+  #navbar {
+    position: absolute;
+    top: 72px;
+    transform: translateY(0%);
+    margin-left: 0px;
+    width: 100%;
+    display: none;
+  }
+  #home {
+    display: block;
+  }
+}
+
+/*** FOOTER STYLING ***/
+#footer {
+  background-color: #3e424b;
+  width: 100%;
+  height: auto;
+  padding: 20px 30px;
+}
+
+#footer-wrapper {
+  max-width: 1000px;
+  background-color: #3e424b;
+  margin: 0 auto;
+}
+
+/* generic stylings for all footer columns */
+#footer-left, #footer-center, #footer-right {
+  width: 33.333%;
+  height: 100%;
+  background-color: #3e424b;
+}
+#footer-left { float: left; }
+#footer-center { display: inline-block; }
+#footer-right { float: right; }
+
+/* left footer */
+#footer-mukti-logo {
+  height: 52px;
+  width: 100px;
+}
+#footer-left ul {
+  font-size: 0.75em;
+  background-color: #3e424b;
+  padding-left: 0px;
+  margin-top: 5px;
+}
+#footer-left li {
+  display: inline;
+  background-color: #3e424b;
+}
+#footer-left a {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #3e424b;
+  color: #fff9f5;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+#footer-left p {
+  font-size: 0.7em;
+  margin-top: 10px;
+  background-color: #3e424b;
+  color: #989eaa;
+}
+.list-pipe-seperator > li:not(:last-child)::after {
+  content: "|";
+  margin-left: 0.25em;
+  color: #fff9f5;
+}
+
+/* center footer */
+#footer-center {
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.center-footer-panel {
+  background-color: #3e424b;
+  margin-bottom: 15px;
+  float: left;
+  width: 100%
+}
+.icon-container {
+  background-color: dimgray;
+  display: inline-block;
+  border-radius: 50px;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  float: left;
+}
+
+.icon-container i {
+  background-color: dimgray;
+  color: ghostwhite;
+  font-size: 1.3em;
+  margin-left: 4px;
+  margin-top: 1px;
+}
+
+.center-footer-panel-content {
+  display: inline-block;
+  float: left;
+  width: calc(100% - 40px);
+  margin-left: 10px;
+  background: #3e424b;
+}
+
+.center-footer-panel-content p {
+  color: white;
+  background: #3e424b;
+  font-size: 0.7em;
+}
+
+#footer-phone-icon {
+  margin-left: 2.5px;
+}
+
+#footer-phone-number {
+  padding-top: 7px;
+}
+
+#footer-envelope-icon {
+  margin-left: 1.5px;
+  margin-top: 1.5px;
+  font-size: 1.1em;
+}
+
+#footer-email-link {
+  display: block;
+  text-decoration: none;
+  background-color: #3e424b;
+  color: #e88e36;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.7em;
+  margin-top: 7px;
+}
+
+#last-panel {
+  margin-bottom: 0px;
+}
+
+/* right footer */
+#footer-right {
+  padding-left: 20px;
+}
+
+#about-mukti {
+  background-color: #3e424b;
+  color: white;
+  font-size: 0.9em;
+}
+
+#about-mukti-para {
+  background-color: #3e424b;
+  color: lightgray;
+  font-size: 0.70em;
+  margin-top: 5px;
+}
+
+.credit {
+  background-color: #3e424b;
+  color: #989eaa;
+  font-size: 0.7em;
+  margin-top: 15px;
+}
+
+.credit a {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #3e424b;
+  color: #989eaa;
+}
+
+/* collapse footer */
+@media screen and (max-width: 649px) {
+  #footer-left, #footer-center, #footer-right {
+    float: none;
+    width: 100%;
+    display: inline-block;
+  }
+  #footer-center, #footer-right {
+    padding-left: 0px;
+    margin-top: 25px;
+  }
+}
