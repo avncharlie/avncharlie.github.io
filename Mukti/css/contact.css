@@ -1,0 +1,39 @@
+#body {
+  margin: auto;
+  position: relative;
+  width: 100%;
+  max-width: 1500px;
+  padding: 45px;
+}
+
+@media screen and (max-width: 1580px) {
+  #body {
+    max-width: 1200px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  #body {
+    max-width: 1000px;
+    padding: 45px;
+  }
+}
+
+#body h1 {
+  color: #E88E36;
+  padding-bottom: 25px;
+}
+
+#body p {
+  padding-bottom: 18px;
+  font-family: 'Raleway', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.3em;
+}
+
+#body span {
+  font-family: 'Raleway', sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #5aa8f6
+}
