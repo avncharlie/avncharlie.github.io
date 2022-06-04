@@ -189,7 +189,15 @@ images = [
     'cat.JPG',
     'joe.JPG',
     'tenners.JPG',
-    'alvo.JPG'
+    'alvo.JPG',
+    'dafoe.JPG',
+    'troublemaker.JPG',
+    'thinktwice.JPG',
+    'sop.JPG',
+    'footemoji.JPG',
+    'yestory.JPG',
+    'naanbed.JPG',
+    'cowstudy.JPG'
 ]
 
 
