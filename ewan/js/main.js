@@ -195,7 +195,7 @@ images = [
 
 function changeBG() {
     image = images[Math.floor(Math.random()*images.length)];
-    document.body.style['background-image'] = 'url(../img/' + image + ')';
+    document.body.style['background-image'] = 'url(../ewan/img/' + image + ')';
 }
 
 // change background
