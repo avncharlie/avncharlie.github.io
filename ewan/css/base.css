@@ -1,0 +1,47 @@
+/*body { margin: 0; padding: 0; }*/
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden; /* dumb */
+}
+
+html, body {
+  height: 100%;
+}
+
+html {
+    /* to fit everything on one page */
+    overflow: hidden;
+}
+
+body {
+    background-image: url('../img/ye_meme.jpg');
+}
+
+#startButton {
+    font-size: xx-large;
+}
+
+#back {
+    background-color: gold;
+    opacity: 1;
+    
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+
+    transition: all 0.5s ease-out;
+}
+
+
+#start {
+    background-color: white;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
