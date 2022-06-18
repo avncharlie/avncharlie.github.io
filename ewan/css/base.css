@@ -16,7 +16,7 @@ html {
 }
 
 body {
-    background-image: url('../img/ye_meme.jpg');
+    background-image: url('../img/backgrounds/ye_meme.jpg');
 }
 
 #startButton {
@@ -44,4 +44,27 @@ body {
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+
+    z-index: 10;
 }
+
+#what {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+}
+
+#whatPicture {
+    opacity: 0;
+    transition: all 1.2s;
+}
+
+.notransition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }

@@ -10,6 +10,7 @@ var Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
+    Body = Matter.Body,
     Composite = Matter.Composite,
     Events = Matter.Events,
     MouseConstraint = Matter.MouseConstraint,
@@ -152,14 +153,150 @@ request2.onload = function() {
 }
 request2.send();
 
+// 'what' sounds 
+var what_sounds = [];
+
+// what 1 
+var request3 = new XMLHttpRequest();
+request3.open("GET", './audio/what/what.mp3', true);
+request3.responseType = "arraybuffer";
+request3.onload = function() {
+    audioCtx.decodeAudioData(request3.response, function(buffer) {
+        what_sounds[0] = buffer;
+    });
+}
+request3.send();
+
+// what 2 
+var request4 = new XMLHttpRequest();
+request4.open("GET", './audio/what/what2.mp3', true);
+request4.responseType = "arraybuffer";
+request4.onload = function() {
+    audioCtx.decodeAudioData(request4.response, function(buffer) {
+        what_sounds[1] = buffer;
+    });
+}
+request4.send();
+
+// what 3
+var request5 = new XMLHttpRequest();
+request5.open("GET", './audio/what/what3.mp3', true);
+request5.responseType = "arraybuffer";
+request5.onload = function() {
+    audioCtx.decodeAudioData(request5.response, function(buffer) {
+        what_sounds[2] = buffer;
+    });
+}
+request5.send();
+
+// what 4
+var request6 = new XMLHttpRequest();
+request6.open("GET", './audio/what/what4.mp3', true);
+request6.responseType = "arraybuffer";
+request6.onload = function() {
+    audioCtx.decodeAudioData(request6.response, function(buffer) {
+        what_sounds[3] = buffer;
+    });
+}
+request6.send();
+
+// what 5
+var request7 = new XMLHttpRequest();
+request7.open("GET", './audio/what/what5.mp3', true);
+request7.responseType = "arraybuffer";
+request7.onload = function() {
+    audioCtx.decodeAudioData(request7.response, function(buffer) {
+        what_sounds[4] = buffer;
+    });
+}
+request7.send();
+
+// what 5
+var request8 = new XMLHttpRequest();
+request8.open("GET", './audio/what/what6.mp3', true);
+request8.responseType = "arraybuffer";
+request8.onload = function() {
+    audioCtx.decodeAudioData(request8.response, function(buffer) {
+        what_sounds[5] = buffer;
+    });
+}
+request8.send();
+
+console.log(what_sounds);
+
 function bouncePlaySound() {
-    console.log('hi')
     if (sound_enabled) {
         playSound(bounceSound);
     }
 }
 
 Events.on(engine, 'collisionStart', bouncePlaySound);
+
+ball_moving_underway = false;
+
+what_pictures = [
+    'what.png',
+    'what2.png',
+    'what3.png',
+    'what4.png',
+    'what5.png'
+]
+
+lastPickedWhatPic = "";
+lastPickedWhatAudio = "";
+
+function checkBallOutside() {
+    var outOfBounds = false;
+    if (ewacircle.position.x > right.position.x) {
+        outOfBounds = true;
+    } else if (ewacircle.position.x < left.position.x) {
+        outOfBounds = true;
+    } else if (ewacircle.position.y > ground.position.y) {
+        outOfBounds = true;
+    } else if (ewacircle.position.y < ceiling.position.y) {
+        outOfBounds = true;
+    }
+
+    if (outOfBounds && !ball_moving_underway) {
+        ball_moving_underway = true;
+        setTimeout(function () {
+            Body.setPosition(ewacircle, {x: width/2, y: height/2});
+            ball_moving_underway = false;
+        }, 1200);
+
+        var whatPic = document.getElementById("whatPicture");
+
+        // pic random what pic (that is not the same as the last one)
+        random_what_pic = what_pictures[Math.floor(Math.random()*what_pictures.length)];
+        while (random_what_pic == lastPickedWhatPic) {
+            random_what_pic = what_pictures[Math.floor(Math.random()*what_pictures.length)];
+        }
+        whatPic.src = './img/what/' + random_what_pic;
+        lastPickedWhatPic = random_what_pic;
+
+        whatPic.classList.add('notransition'); // Disable transitions
+
+        // make what thing visible with no css change
+        whatPic.style["opacity"] = '1';
+
+        whatPic.offsetHeight; // Trigger a reflow, flushing the CSS changes
+        whatPic.classList.remove('notransition'); // Re-enable transitions
+
+        setTimeout(function() {
+            // let it fade out (using re enabled css change), after 0.2 secs of staying still
+            whatPic.style["opacity"] = '0';
+        }, 200)
+
+        random_what_sound = what_sounds[Math.floor(Math.random()*what_sounds.length)];
+        while (random_what_sound == lastPickedWhatAudio) {
+            random_what_sound = what_sounds[Math.floor(Math.random()*what_sounds.length)];
+        }
+        playSound(random_what_sound);
+        lastPickedWhatAudio = random_what_sound;
+    }
+}
+
+Events.on(engine, 'beforeUpdate', checkBallOutside);
 
 soundButton = document.getElementById("startButton");
 back = document.getElementById("back");
@@ -203,7 +340,7 @@ images = [
 
 function changeBG() {
     image = images[Math.floor(Math.random()*images.length)];
-    document.body.style['background-image'] = 'url(../ewan/img/' + image + ')';
+    document.body.style['background-image'] = 'url(../ewan/img/backgrounds/' + image + ')';
 }
 
 // change background
