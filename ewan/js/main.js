@@ -222,8 +222,6 @@ request8.onload = function() {
 }
 request8.send();
 
-console.log(what_sounds);
-
 function bouncePlaySound() {
     if (sound_enabled) {
         playSound(bounceSound);
@@ -334,7 +332,17 @@ images = [
     'footemoji.JPG',
     'yestory.JPG',
     'naanbed.JPG',
-    'cowstudy.JPG'
+    'cowstudy.JPG',
+    'zekegirl.JPG',
+    'kasiabuff.JPG',
+    'tenilleGrin.JPG',
+    'kasiapic.JPG',
+    'ewanWatermelon.JPG',
+    'charlieforehead.JPG',
+    'daboys.JPG',
+    'nickyoung.JPG',
+    'nickSlick.JPG',
+    'ethanFunny.PNG'
 ]
 
 
