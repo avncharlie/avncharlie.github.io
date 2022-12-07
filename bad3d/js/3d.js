@@ -7,6 +7,8 @@
 //     Vertex
 //     Vector
 //   Rotation
+//   EdgeMaterial
+//   FaceMaterial
 //   Mesh
 //   Camera
 //   WorldObject
@@ -57,6 +59,12 @@ function Coord(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
+}
+
+Coord.prototype.scale = function(scale) {
+    this.x *= scale;
+    this.y *= scale;
+    this.z *= scale;
 }
 
 Coord.prototype.add = function(thing) {
@@ -200,6 +208,8 @@ Rotation.prototype.apply_rotation_to_mesh = function(mesh) {
         vertices: [],
         edges: mesh.edges,
         faces: mesh.faces,
+        edge_materials: mesh.edge_materials,
+        face_materials: mesh.face_materials,
     });
 
     for (let x = 0; x < mesh.vertices.length; x++) {
@@ -214,8 +224,6 @@ Rotation.prototype.apply_rotation_to_mesh = function(mesh) {
 Rotation.prototype.calculate_rotation_looking_at = function(position, looking_at) {
     let D = position.subtract(looking_at);
 
-    //console.log(D);
-
     let Rz = -Math.atan(D.x/D.y);
     if (D.y < 0) {
         // if look at position is behind observer, add pi
@@ -225,8 +233,6 @@ Rotation.prototype.calculate_rotation_looking_at = function(position, looking_at
 
     let adj = D.y
     adj = Math.sqrt(D.y**2+D.x**2);
-
-    //console.log(D.y, D.x, Math.sqrt(D.y**2+D.x**2))
 
     let Rx = Math.atan(D.z/adj);
     if (D.y < 0) {
@@ -249,6 +255,60 @@ Rotation.prototype.calculate_rotation_looking_at = function(position, looking_at
     }
 };
 
+function EdgeMaterial(args) {
+    /*
+     * Defines materal for edges 
+     * Parameters:
+     *   fill_colour: colour to draw line with
+     *   line_width: pixel width of line
+     */
+    this.fill_colour = args.fill_colour;
+    this.line_width = args.line_width;
+}
+
+EdgeMaterial.prototype.clone = function() {
+    return new EdgeMaterial({
+        fill_colour: this.fill_colour,
+        line_width: this.line_width,
+    });
+}
+
+EdgeMaterial.default_edge_material = function() {
+    return new EdgeMaterial({
+        fill_colour: 'gray',
+        line_width: 1
+    });
+}
+
+function FaceMaterial(args) {
+    /*
+     * Defines materal for faces 
+     * Parameters:
+     *   fill_colour: colour to draw face with
+     *   stroke_edge: boolean, whether or not to draw face edge lines
+     *   edge_style: EdgeMaterial to draw face lines with (if stroke_edge is true)
+     */
+    this.fill_colour = args.fill_colour;
+    this.stroke_edge = args.stroke_edge;
+    this.edge_style = args.edge_style;
+}
+
+FaceMaterial.prototype.clone = function() {
+    return new FaceMaterial({
+        fill_colour: this.fill_colour,
+        stroke_edge: this.stroke_edge,
+        edge_style: this.edge_style.clone(),
+    })
+}
+
+FaceMaterial.default_face_material = function() {
+    return new FaceMaterial({
+        fill_colour: 'lightgray',
+        stroke_edge: true,
+        edge_style: EdgeMaterial.default_edge_material()
+    });
+}
+
 function Mesh(args) {
     /*
      * Stores collection of vertices, edges and faces defining a mesh
@@ -256,10 +316,163 @@ function Mesh(args) {
      *   vertices: list of Vertex objects
      *   edges: list of (list of two vertices defining edge)
      *   faces: list of (list of vertices defining a face)
+     *   edge_materials: list of EdgeMaterial defining materials for given edges. optional.
+     *   face_materials: list of FaceMaterial defining materials for given faces. optional.
      */
     this.vertices = args.vertices;
     this.edges = args.edges;
     this.faces = args.faces;
+
+    this.edge_materials = args.edge_materials;
+    if (args.edge_materials == undefined) {
+        let edge_mats = []
+        for (let x = 0; x < this.edges.length; x++) {
+            edge_mats.push(EdgeMaterial.default_edge_material());
+        }
+        this.edge_materials = edge_mats;
+    }
+    this.face_materials = args.face_materials;
+    if (args.face_materials == undefined) {
+        let face_mats = []
+        for (let x = 0; x < this.faces.length; x++) {
+            face_mats.push(FaceMaterial.default_face_material());
+        }
+        this.face_materials = face_mats;
+    }
+    //console.log(this, args);
+}
+
+// functions to generate common meshes
+Mesh.meshes = {
+    axis: function(s) {
+        let tip_offset = s/20;
+        let width_offset = s/40;
+        return new Mesh({
+            vertices: [
+                new Vertex(0, 0, 0),
+                new Vertex(s, 0, 0),
+                new Vertex(0, s, 0),
+                new Vertex(0, 0, s),
+            ],
+            edges: [
+                [0, 1],
+                [0, 2],
+                [0, 3],
+            ],
+            faces: [],
+            edge_materials: [
+                new EdgeMaterial({ fill_colour: 'red', line_width: 2, }),
+                new EdgeMaterial({ fill_colour: 'blue', line_width: 2, }),
+                new EdgeMaterial({ fill_colour: 'green', line_width: 2, }),
+            ]
+        })
+    },
+    right_angled_triangle: function(s) {
+        return new Mesh({
+            vertices: [
+                new Vertex(0, 0, 0),
+                new Vertex(s, 0, 0),
+                new Vertex(0, 0, s),
+            ],
+            edges: [
+                [0, 1],
+                [1, 2],
+                [2, 0],
+            ],
+            faces: []
+        });
+    },
+    line: function(v1, v2) {
+        return new Mesh({
+            vertices: [
+                v1,
+                v2,
+            ],
+            edges: [
+                [0, 1],
+            ],
+            faces: []
+        })
+    },
+    cube: function(s) {
+        return (new Mesh({
+            vertices: [
+                new Vertex(0, 0, 0), // 0, 0 0 0 
+                new Vertex(s, 0, 0), // 1, x 0 0 
+                new Vertex(0, s, 0), // 2, 0 y 0
+                new Vertex(0, 0, s), // 3, 0 0 z
+                new Vertex(s, s, 0), // 4, x y 0
+                new Vertex(s, 0, s), // 5, x 0 z
+                new Vertex(0, s, s), // 6, 0 y z
+                new Vertex(s, s, s), // 7, x y z
+            ],
+            edges: [],
+            faces: [
+                [0, 1, 5, 3],
+                [0, 3, 6, 2],
+                [0, 1, 4, 2], //bottom
+                [3, 5, 7, 6], //top
+                [2, 4, 7, 6],
+                [1, 5, 7, 4]
+            ],
+       })).translate(new Vector(-s/2, -s/2, -s/2));
+    },
+}
+
+Mesh.load_obj = function(obj, callback) {
+    let obj_mesh_args = {
+        vertices: [],
+        edges: [],
+        faces: []
+    };
+ 
+    obj = obj.split('\n');
+    for (let x = 0; x < obj.length; x++) {
+        let line = obj[x];
+        switch (line.slice(0,2)) {
+            case 'v ':
+                // add vertex
+                let v = line.split(' ').slice(1);
+                obj_mesh_args.vertices.push(new Vertex(
+                    Number(v[0]),
+                    Number(v[2]),
+                    Number(v[1]),
+                ))
+                break;
+            case 'l ':
+                break;
+            case 'f ':
+                // add face
+
+                let f = line.split(' ').slice(1);
+
+                // remove texture and normal information
+                for (let v = 0; v < f.length; v++) {
+                    // obj files are 1 indexed, make 0 indexed
+                    f[v] = Number(f[v].split("/")[0] - 1);
+                }
+
+                obj_mesh_args.faces.push(f);
+                break;
+        }
+    }
+
+    callback(new Mesh(obj_mesh_args));
+}
+
+Mesh.load_obj_file = function(file_path, callback) {
+    /*
+     * Load mesh from obj file. After loading, execute callback(loaded_mesh)
+     * Parameters:
+     *   callback: callback function
+     */
+
+    fetch(file_path)
+        .then(function(response) {
+            return response.text();
+        }).then(function(data) {
+            Mesh.load_obj(data, callback);
+        });
 }
 
 Mesh.prototype.translate = function(vector) {
@@ -298,10 +511,22 @@ Mesh.prototype.clone = function() {
         new_faces.push(this.faces[x].slice());
     }
 
+    let new_edge_materials = [];
+    for (let x = 0; x < this.edge_materials.length; x++) {
+        new_edge_materials.push(this.edge_materials[x].clone());
+    }
+
+    let new_face_materials = [];
+    for (let x = 0; x < this.face_materials.length; x++) {
+        new_face_materials.push(this.face_materials[x].clone());
+    }
+
     return new Mesh({
         vertices: new_verts,
         edges: new_edges,
-        faces: new_faces
+        faces: new_faces,
+        edge_materials: new_edge_materials,
+        face_materials: new_face_materials,
     });
 }
 
@@ -498,7 +723,7 @@ WorldObject.prototype.rotate = function(rotation, origin) {
         .add_vector_and_return(move_back);
 }
 
-WorldObject.prototype.animate_rotation = function(rotation, origin, time, kframe_func) {
+WorldObject.prototype.animate_rotation = function(rotation, origin, time, kframe_func, callback) {
     /*
      * Animate object rotation
      * Parameters:
@@ -506,6 +731,7 @@ WorldObject.prototype.animate_rotation = function(rotation, origin, time, kframe
      *   origin: Coord object that will be origin of rotation
      *   time: total animation time
      *   kframe_func: name of function in `keyframe_functions` to animate with
+     *   callback: optional. callback function to call after animation finished
      */
 
     let start_pos = this.position.clone();
@@ -537,6 +763,14 @@ WorldObject.prototype.animate_rotation = function(rotation, origin, time, kframe
         obj.rotation = curr_rot;
         obj.position = curr_rot.apply_rotation(start_pos.add_vector_and_return(move_to_origin)).add_vector_and_return(move_back);
 
+
+        // call callback at end of animation
+        if (count == max_count) {
+            if (callback !== undefined) {
+                callback();
+            }
+        }
+
     }, interval)
 
 }
@@ -550,13 +784,14 @@ WorldObject.prototype.translate = function(vector) {
     this.position.add_vector(vector);
 }
 
-WorldObject.prototype.animate_translation = function(vector, time, kframe_func) {
+WorldObject.prototype.animate_translation = function(vector, time, kframe_func, callback) {
     /*
      * Animate object translation
      * Parameters:
      *   vector: Vector object defining translation
      *   time: total animation time
      *   kframe_func: name of function in `keyframe_functions` to animate with
+     *   callback: optional. callback function to call after animation finished
      */
     let start_pos = this.position.clone();
 
@@ -581,6 +816,13 @@ WorldObject.prototype.animate_translation = function(vector, time, kframe_func) 
         // translate as required
         obj.position = start_pos.add_vector_and_return(vector.multiply(perc));
 
+        // call callback at end of animation
+        if (count == max_count) {
+            if (callback !== undefined) {
+                callback();
+            }
+        }
+
     }, interval)
 }
 
@@ -597,12 +839,17 @@ WorldObject.rotate_objects = function(objects, rotation, origin) {
     }
 }
 
-WorldObject.animate_object_rotations = function(objects, rotation, origin, time, kframe_func) {
+WorldObject.animate_object_rotations = function(objects, rotation, origin, time, kframe_func, callback) {
     /*
      * Animate multiple object rotations
+     * Callback will only be called once.
      */
     for (let x = 0; x<objects.length; x++) {
-        objects[x].animate_rotation(rotation, origin, time, kframe_func);
+        let c = undefined;
+        if (x == objects.length - 1) {
+            c = callback;
+        }
+        objects[x].animate_rotation(rotation, origin, time, kframe_func, c);
     }
 }
 
@@ -615,12 +862,17 @@ WorldObject.translate_objects = function(objects, vector) {
     }
 }
 
-WorldObject.animate_object_translations = function(objects, vector, time, kframe_func) {
+WorldObject.animate_object_translations = function(objects, vector, time, kframe_func, callback) {
     /*
      * Animate multiple object rotations
+     * Callback will only be called once.
      */
     for (let x = 0; x<objects.length; x++) {
-        objects[x].animate_translation(vector, time, kframe_func);
+        let c = undefined;
+        if (x == objects.length - 1) {
+            c = callback;
+        }
+        objects[x].animate_translation(vector, time, kframe_func, c);
     }
 }
 
@@ -661,6 +913,14 @@ World.place_object_in_mesh = function(mesh, object) {
     // add vertices
     for (let x = 0; x < mesh_to_add.vertices.length; x++) {
         mesh.vertices.push(mesh_to_add.vertices[x]);
+    }
+
+    // add materials
+    for (let x = 0; x < mesh_to_add.edge_materials.length; x++) {
+        mesh.edge_materials.push(mesh_to_add.edge_materials[x]);
+    }
+    for (let x = 0; x < mesh_to_add.face_materials.length; x++) {
+        mesh.face_materials.push(mesh_to_add.face_materials[x]);
     }
 
     // add edges
@@ -736,83 +996,100 @@ World.prototype.project = function(mesh) {
 
 World.prototype.draw = function(projected_points, mesh) {
     /*
-     * Draw projection on screen
+     * Draw projection on screen using painter's algorithm
      */
 
-    // draw points
-    for (let p = 0; p < projected_points.length; p++) {
-        let final_x = projected_points[p][0];
-        let final_y = projected_points[p][1];
-        this.ctx.fillRect(final_x-1, final_y-1, 2, 2);
+    // draw points (will get painted over by everything)
+    //for (let p = 0; p < projected_points.length; p++) {
+    //    let final_x = projected_points[p][0];
+    //    let final_y = projected_points[p][1];
+    //    this.ctx.fillStyle = 'black';
+    //    this.ctx.fillRect(final_x-1, final_y-1, 2, 2);
+    //}
+
+    // first sort edges and faces by depth
+    // store [index, value] so original index retrievable after sort
+    let sorted = []
+    for (let x = 0; x < mesh.edges.length; x++) {
+        sorted.push([x, mesh.edges[x]]);
+    }
+    for (let x = 0; x < mesh.faces.length; x++) {
+        sorted.push([x, mesh.faces[x]]);
     }
 
-    // draw edges
-    for (let e = 0; e < mesh.edges.length; e++) {
-        let p1 = projected_points[mesh.edges[e][0]];
-        let p2 = projected_points[mesh.edges[e][1]];
+    sorted.sort(function(thing1, thing2) {
+        // sort values
+        thing1 = thing1[1];
+        thing2 = thing2[1];
 
-        // set line stroke and line width
-        this.ctx.beginPath();
-        this.ctx.moveTo(p1[0], p1[1]);
-        this.ctx.lineTo(p2[0], p2[1]);
-        this.ctx.stroke();
-    }
-
-    // faces are drawn usiing painters algorithm
-
-    // 1. sort faces by distance to camera
-    mesh.faces.sort(function(face1, face2) {
-        let face1_depth = new Coord(0, 0, 0)
-        for (let v = 0; v < face1.length; v++) {
-            face1_depth.add(mesh.vertices[face1[v]]);
+        let thing1_depth = new Coord(0, 0, 0)
+        for (let v = 0; v < thing1.length; v++) {
+            thing1_depth.add(mesh.vertices[thing1[v]]);
         }
-        face1_depth = new Coord(
-            face1_depth.x / face1.length,
-            face1_depth.y / face1.length,
-            face1_depth.z / face1.length,
-        )
+        thing1_depth.scale(1 / thing1.length);
 
-        let face2_depth = new Coord(0, 0, 0)
-        for (let v = 0; v < face2.length; v++) {
-            face2_depth.add(mesh.vertices[face2[v]]);
+        let thing2_depth = new Coord(0, 0, 0)
+        for (let v = 0; v < thing2.length; v++) {
+            thing2_depth.add(mesh.vertices[thing2[v]]);
         }
-        face2_depth = new Coord(
-            face2_depth.x / face2.length,
-            face2_depth.y / face2.length,
-            face2_depth.z / face2.length,
-        )
+        thing2_depth.scale(1 / thing2.length);
 
-        return face2_depth.zero_distance() - face1_depth.zero_distance();
+        return thing2_depth.zero_distance() - thing1_depth.zero_distance();
     })
 
-    // 2. draw faces from most distant to least distant
-    for (let f = 0; f < mesh.faces.length; f++) {
-        let face = mesh.faces[f];
+    // next draw edges and faces in depth order from furthest to nearest
+    for (let x = 0; x < sorted.length; x++) {
+        let index = sorted[x][0];
+        let thing = sorted[x][1];
 
-        this.ctx.beginPath();
+        if (thing.length > 2) {
+            // more than two elements; must be a face
+            let face = thing;
 
-        for (let p = 0; p < face.length; p++) {
-            let proj_point = projected_points[face[p]];
-            let world_point = mesh.vertices[face[p]];
-
-            if (p == 0) {
-                this.ctx.moveTo(proj_point[0], proj_point[1]);
-            } else {
-                this.ctx.lineTo(proj_point[0], proj_point[1]);
+            // get face path
+            this.ctx.beginPath();
+            for (let p = 0; p < face.length; p++) {
+                let proj_point = projected_points[face[p]];
+                let world_point = mesh.vertices[face[p]];
+                if (p == 0) {
+                    this.ctx.moveTo(proj_point[0], proj_point[1]);
+                } else {
+                    this.ctx.lineTo(proj_point[0], proj_point[1]);
+                }
             }
+            this.ctx.closePath();
+
+            // apply FaceMaterial
+            let fillStyle;
+            //let colour = (255/sorted.length)*x;
+            //fillStyle = 'rgb(' + colour + ', ' + colour + ', ' + colour + ')';
+            fillStyle = mesh.face_materials[index].fill_colour;
+            //console.log(mesh.clone());
+            this.ctx.fillStyle = fillStyle;
+            this.ctx.fill();
+
+            // if stroke_edge, apply edge_style
+            if (mesh.face_materials[index].stroke_edge) {
+                this.ctx.strokeStyle = mesh.face_materials[index].edge_style.fill_colour;
+                this.ctx.lineWidth = mesh.face_materials[index].edge_style.line_width;;
+                this.ctx.stroke();
+            }
+        } else {
+            // only lines have 2 elements
+            let edge = thing;
+            let p1 = projected_points[edge[0]];
+            let p2 = projected_points[edge[1]];
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(p1[0], p1[1]);
+            this.ctx.lineTo(p2[0], p2[1]);
+
+            this.ctx.strokeStyle = mesh.edge_materials[index].fill_colour;
+            this.ctx.line_width = mesh.edge_materials[index].line_width;
+
+            this.ctx.stroke();
         }
-        this.ctx.closePath();
-
-        let colour = (255/mesh.faces.length)*f;
-        let fillStyle = 'rgb(' + colour + ', ' + colour + ', ' + colour + ')';
-        //fillStyle = 'yellow';
-        this.ctx.fillStyle = fillStyle;
-
-
-        this.ctx.fill();
-        this.ctx.stroke();
     }
-
 }
 
 World.prototype.render = function(args) {
@@ -829,8 +1106,12 @@ World.prototype.render = function(args) {
     let world_mesh = new Mesh({
         vertices: [],
         edges: [],
-        faces: []
+        faces: [],
+        edge_materials: [],
+        face_materials: [],
     });
+
+    //console.log(this.objects);
 
     // place objects in world
     for (let x = 0; x < this.objects.length; x++) {
