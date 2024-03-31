@@ -19,6 +19,8 @@
 <body>
     <canvas id="outCanvas"></canvas> 
 
+    <div id='text'>Alvin Charles</div>
+
     <!-- js -->
 
     <script src="./js/3d.js"></script>      <!-- 3d framework -->
@@ -31,6 +33,20 @@
     -->
 
 </body>
+<script>
+  // Select the div element by its ID
+  const textDiv = document.getElementById('text');
+
+  // Add a click event listener to the div
+  textDiv.addEventListener('click', function() {
+    // Check the current text content of the div and toggle it
+    if (this.textContent === 'Alvin Charles') {
+      this.textContent = 'Glenn Charles';
+    } else {
+      this.textContent = 'Alvin Charles';
+    }
+  });
+</script>
  
 </html>
 
