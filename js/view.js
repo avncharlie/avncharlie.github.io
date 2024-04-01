@@ -58,15 +58,16 @@ let gun = '......................................\n' +
           '......................................\n';
 
 
+let curr_view_is_top = true;
 let rand_conway = Conway.random(30, 30).to_string();
 let conway_grid = new Conway3d(world, rand_conway, 20, 75);
 
-camera.position = new Coord(35, -35, 35);
-camera.look_at(new Coord(0, 0, 0)); 
+view_top();
 conway_grid.play();
 
 setInterval(function () {
-    conway_grid.world.camera.rotate_camera(0, 0.01);
+    if (!curr_view_is_top)
+        conway_grid.world.camera.rotate_camera(0, 0.01);
 }, 50);
 
 // side view
@@ -78,10 +79,9 @@ function view_side() {
 // top view
 function view_top() {
     camera.position = new Coord(0.001, -0.001, 60);
-    camera.look_at(new Coord(0, 0, -0)); 
+    camera.look_at(new Coord(0, 0, 0)); 
+    camera.rotation.Rz = Math.PI;
 }
-
-let curr_view_is_top = false;
 
 // switch views with c
 window.addEventListener('keypress', function(event) {

@@ -45,6 +45,12 @@
     } else {
       this.textContent = 'Alvin Charles';
     }
+
+    if (curr_view_is_top)
+        view_side();
+    else
+        view_top();
+    curr_view_is_top = !curr_view_is_top;
   });
 </script>
  
