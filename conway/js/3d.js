@@ -124,53 +124,8 @@ Coord.prototype.add = function(coord) {
     this.x += coord.x;
     this.y += coord.y;
     this.z += coord.z;
-    return this;
+
 }
-
-Coord.prototype.subtract = function(other) {
-    return new Coord(this.x - other.x, this.y - other.y, this.z - other.z);
-};
-
-Coord.prototype.distance_to = function(other) {
-    let dx = this.x - other.x;
-    let dy = this.y - other.y;
-    let dz = this.z - other.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-};
-
-Coord.prototype.magnitude = function() {
-    return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-};
-
-Coord.prototype.divide = function(value) {
-    this.x /= value;
-    this.y /= value;
-    this.z /= value;
-    return this;
-};
-
-Coord.prototype.normalize = function() {
-    let mag = this.magnitude();
-    if (mag > 0) {
-        this.divide(mag);
-    }
-    return this;
-};
-
-Coord.prototype.limit = function(max) {
-    if (this.magnitude() > max) {
-        this.normalize();
-        this.multiply(max);
-    }
-    return this;
-};
-
-Coord.prototype.multiply = function(value) {
-    this.x *= value;
-    this.y *= value;
-    this.z *= value;
-    return this;
-};
 
 /**
  * TODO: maybe move to vector
@@ -1492,6 +1447,14 @@ World.prototype.draw = function(projected_points, mesh) {
      * Draw projection on screen using painter's algorithm
      */
 
+    // draw points (will get painted over by everything)
+    // for (let p = 0; p < projected_points.length; p++) {
+    //     let final_x = projected_points[p][0];
+    //     let final_y = projected_points[p][1];
+    //     this.ctx.fillStyle = 'black';
+    //     this.ctx.fillRect(final_x-1, final_y-1, 2, 2);
+    // }
+
     // first sort edges and faces by depth
     // store [index, value] so original index retrievable after sort
     let sorted = []
@@ -1520,7 +1483,7 @@ World.prototype.draw = function(projected_points, mesh) {
         thing2_depth.scale(1 / thing2.length);
 
         return thing2_depth.zero_distance() - thing1_depth.zero_distance();
-    });
+    })
 
     // next draw edges and faces in depth order from furthest to nearest
     for (let x = 0; x < sorted.length; x++) {
@@ -1547,7 +1510,7 @@ World.prototype.draw = function(projected_points, mesh) {
             // apply FaceMaterial
             let fillStyle;
 
-            let colour = (255 / sorted.length) * x;
+            let colour = (255/sorted.length)*x;
             fillStyle = 'rgb(' + colour + ', ' + colour + ', ' + colour + ')';
 
             // fillStyle = mesh.face_materials[index].fill_colour;
@@ -1558,7 +1521,7 @@ World.prototype.draw = function(projected_points, mesh) {
             // if stroke_edge, apply edge_style
             if (mesh.face_materials[index].stroke_edge) {
                 this.ctx.strokeStyle = mesh.face_materials[index].edge_style.fill_colour;
-                this.ctx.lineWidth = mesh.face_materials[index].edge_style.line_width;
+                this.ctx.lineWidth = mesh.face_materials[index].edge_style.line_width;;
                 this.ctx.stroke();
             }
         } else {
@@ -1571,126 +1534,13 @@ World.prototype.draw = function(projected_points, mesh) {
             this.ctx.moveTo(p1[0], p1[1]);
             this.ctx.lineTo(p2[0], p2[1]);
 
-            // Apply dashed line if the edge has a dash style
-            if (mesh.edge_materials[index].dash_pattern) {
-                this.ctx.setLineDash(mesh.edge_materials[index].dash_pattern);
-            } else {
-                this.ctx.setLineDash([]); // Reset to solid line
-            }
-
             this.ctx.strokeStyle = mesh.edge_materials[index].fill_colour;
-            this.ctx.lineWidth = mesh.edge_materials[index].line_width;
+            this.ctx.line_width = mesh.edge_materials[index].line_width;
 
             this.ctx.stroke();
-            this.ctx.setLineDash([]); // Reset to solid line for next stroke
         }
     }
 }
-
-/**
- * Draw projection on world canvas ctx.
- * @param {number[][]} projected_points - projected points
- * @param {Mesh} mesh - mesh projection came from
- */
-// World.prototype.draw = function(projected_points, mesh) {
-//     /*
-//      * Draw projection on screen using painter's algorithm
-//      */
-//
-//     // draw points (will get painted over by everything)
-//     // for (let p = 0; p < projected_points.length; p++) {
-//     //     let final_x = projected_points[p][0];
-//     //     let final_y = projected_points[p][1];
-//     //     this.ctx.fillStyle = 'black';
-//     //     this.ctx.fillRect(final_x-1, final_y-1, 2, 2);
-//     // }
-//
-//     // first sort edges and faces by depth
-//     // store [index, value] so original index retrievable after sort
-//     let sorted = []
-//     for (let x = 0; x < mesh.edges.length; x++) {
-//         sorted.push([x, mesh.edges[x]]);
-//     }
-//     for (let x = 0; x < mesh.faces.length; x++) {
-//         sorted.push([x, mesh.faces[x]]);
-//     }
-//
-//     sorted.sort(function(thing1, thing2) {
-//         // sort values
-//         thing1 = thing1[1];
-//         thing2 = thing2[1];
-//
-//         let thing1_depth = new Coord(0, 0, 0)
-//         for (let v = 0; v < thing1.length; v++) {
-//             thing1_depth.add(mesh.vertices[thing1[v]]);
-//         }
-//         thing1_depth.scale(1 / thing1.length);
-//
-//         let thing2_depth = new Coord(0, 0, 0)
-//         for (let v = 0; v < thing2.length; v++) {
-//             thing2_depth.add(mesh.vertices[thing2[v]]);
-//         }
-//         thing2_depth.scale(1 / thing2.length);
-//
-//         return thing2_depth.zero_distance() - thing1_depth.zero_distance();
-//     })
-//
-//     // next draw edges and faces in depth order from furthest to nearest
-//     for (let x = 0; x < sorted.length; x++) {
-//         let index = sorted[x][0];
-//         let thing = sorted[x][1];
-//
-//         if (thing.length > 2) {
-//             // more than two elements; must be a face
-//             let face = thing;
-//
-//             // get face path
-//             this.ctx.beginPath();
-//             for (let p = 0; p < face.length; p++) {
-//                 let proj_point = projected_points[face[p]];
-//                 let world_point = mesh.vertices[face[p]];
-//                 if (p == 0) {
-//                     this.ctx.moveTo(proj_point[0], proj_point[1]);
-//                 } else {
-//                     this.ctx.lineTo(proj_point[0], proj_point[1]);
-//                 }
-//             }
-//             this.ctx.closePath();
-//
-//             // apply FaceMaterial
-//             let fillStyle;
-//
-//             let colour = (255/sorted.length)*x;
-//             fillStyle = 'rgb(' + colour + ', ' + colour + ', ' + colour + ')';
-//
-//             // fillStyle = mesh.face_materials[index].fill_colour;
-//
-//             this.ctx.fillStyle = fillStyle;
-//             this.ctx.fill();
-//
-//             // if stroke_edge, apply edge_style
-//             if (mesh.face_materials[index].stroke_edge) {
-//                 this.ctx.strokeStyle = mesh.face_materials[index].edge_style.fill_colour;
-//                 this.ctx.lineWidth = mesh.face_materials[index].edge_style.line_width;;
-//                 this.ctx.stroke();
-//             }
-//         } else {
-//             // only lines have 2 elements
-//             let edge = thing;
-//             let p1 = projected_points[edge[0]];
-//             let p2 = projected_points[edge[1]];
-//
-//             this.ctx.beginPath();
-//             this.ctx.moveTo(p1[0], p1[1]);
-//             this.ctx.lineTo(p2[0], p2[1]);
-//
-//             this.ctx.strokeStyle = mesh.edge_materials[index].fill_colour;
-//             this.ctx.line_width = mesh.edge_materials[index].line_width;
-//
-//             this.ctx.stroke();
-//         }
-//     }
-// }
 
 /**
  * Render world to canvas
